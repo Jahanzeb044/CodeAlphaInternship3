@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Player</title>
+  <style>
+    /* CSS Bucket: Styling for the music player */
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #679EB8, #b1c9d4);
+      color: white;
+    }
+
+    .music-player {
+      text-align: center;
+      padding: 20px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.6);
+      width: 300px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .music-player img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .music-info {
+      margin: 10px 0;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 10px;
+    }
+
+    .controls button {
+      background: #3498db;
+      border: none;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .controls button:hover {
+      background: #2980b9;
+    }
+
+    .time {
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>    
+  <!-- HTML Bucket: Structure for the music player -->
+  <div class="music-player">
+    <h1>MP MUSIC FISTA</h1>
+
+    <img src="https://via.placeholder.com/300" alt="Album Art" id="album-art">
+    <div class="music-info">
+      <h2 id="title">Song Title</h2>
+      <p id="artist">Artist Name</p>
+    </div>
+    <audio id="audio" src=""></audio>
+    <div class="time">
+      <span id="current-time">0:00</span> / <span id="duration">0:00</span>
+    </div>
+    <div class="controls">
+      <button id="prev">Prev</button>
+      <button id="play">Play</button>
+      <button id="next">Next</button>
+    </div>
+  </div>
+
+  <script>
+    // JavaScript Bucket: Adding functionality
+    const songs = [
+      {
+        title: "Song 1",
+        artist: "Artist 1",
+        src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+        img: "https://via.placeholder.com/300/FF5733/FFFFFF?text=Song+1",
+      },
+      {
+        title: "Song 2",
+        artist: "Artist 2",
+        src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+        img: "https://via.placeholder.com/300/33FF57/FFFFFF?text=Song+2",
+      },
+      {
+        title: "Song 3",
+        artist: "Artist 3",
+        src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+        img: "https://via.placeholder.com/300/5733FF/FFFFFF?text=Song+3",
+      },
+    ];
+
+    let currentIndex = 0;
+
+    const audio = document.getElementById("audio");
+    const title = document.getElementById("title");
+    const artist = document.getElementById("artist");
+    const albumArt = document.getElementById("album-art");
+    const playButton = document.getElementById("play");
+    const prevButton = document.getElementById("prev");
+    const nextButton = document.getElementById("next");
+    const currentTimeElement = document.getElementById("current-time");
+    const durationElement = document.getElementById("duration");
+
+    // Load the first song
+    function loadSong(index) {
+      const song = songs[index];
+      title.textContent = song.title;
+      artist.textContent = song.artist;
+      albumArt.src = song.img;
+      audio.src = song.src;
+    }
+
+    // Play or Pause the audio
+    function togglePlay() {
+      if (audio.paused) {
+        audio.play();
+        playButton.textContent = "Pause";
+      } else {
+        audio.pause();
+        playButton.textContent = "Play";
+      }
+    }
+
+    // Navigate to the next song
+    function nextSong() {
+      currentIndex = (currentIndex + 1) % songs.length;
+      loadSong(currentIndex);
+      audio.play();
+      playButton.textContent = "Pause";
+    }
+
+    // Navigate to the previous song
+    function prevSong() {
+      currentIndex = (currentIndex - 1 + songs.length) % songs.length;
+      loadSong(currentIndex);
+      audio.play();
+      playButton.textContent = "Pause";
+    }
+
+    // Update the time display
+    function updateTime() {
+      const currentMinutes = Math.floor(audio.currentTime / 60);
+      const currentSeconds = Math.floor(audio.currentTime % 60);
+      const durationMinutes = Math.floor(audio.duration / 60);
+      const durationSeconds = Math.floor(audio.duration % 60);
+
+      currentTimeElement.textContent = `${currentMinutes}:${currentSeconds
+        .toString()
+        .padStart(2, "0")}`;
+      durationElement.textContent = `${durationMinutes}:${durationSeconds
+        .toString()
+        .padStart(2, "0")}`;
+    }
+
+    // Event Listeners
+    playButton.addEventListener("click", togglePlay);
+    prevButton.addEventListener("click", prevSong);
+    nextButton.addEventListener("click", nextSong);
+    audio.addEventListener("timeupdate", updateTime);
+
+    // Load the initial song
+    loadSong(currentIndex);
+  </script>
+</body>
+</html>
